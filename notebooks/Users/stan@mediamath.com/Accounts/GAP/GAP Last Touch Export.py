@@ -21,17 +21,34 @@ import pandas as pd
 
 # COMMAND ----------
 
+# MAGIC %run /Users/admin/Credentials
+
+# COMMAND ----------
+
+db = credentials['dag_psycopg2_connection_string']
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC #### Setting up connection
 
 # COMMAND ----------
 
-conn_string =  "host='darkplace.cn3mythbkvex.us-east-1.rds.amazonaws.com' dbname='Dag' user='mm_analytics' password='Gar1h_m3ren6h1'"
+a=db.split(' ')
+dbname = a[0].split('=')[1][1:-1]
+user = a[1].split('=')[1][1:-1]
+host = a[2].split('=')[1][1:-1]
+pw=a[3].split('=')[1][1:-1]
+
+
+# COMMAND ----------
+
+conn_string =  db
 # print(conn_string)
 conn = pg.connect(conn_string)
 cursor = conn.cursor()
 # print "Connected!\n"
-db_engine = create_engine('postgresql://mm_analytics:Gar1h_m3ren6h1@darkplace.cn3mythbkvex.us-east-1.rds.amazonaws.com:5432/Dag')
+db_engine = create_engine('postgresql://'+user+':'+pw+'@'+host+':5432/'+dbname)
 
 # COMMAND ----------
 
@@ -246,3 +263,4 @@ clear = sqlContext.sql("drop table if exists tmp_query_generator_gap_"+str(uniqu
 
 # COMMAND ----------
 
+cursor
