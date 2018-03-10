@@ -26,10 +26,10 @@ import pandas as pd
 
 # COMMAND ----------
 
-# conn_string =  "host='darkplace.cn3mythbkvex.us-east-1.rds.amazonaws.com' dbname='Dag' user='mm_analytics' password='Gar1h_m3ren6h1'"
+conn_string =  "host='darkplace.cn3mythbkvex.us-east-1.rds.amazonaws.com' dbname='Dag' user='mm_analytics' password='Gar1h_m3ren6h1'"
 # print(conn_string)
-# conn = pg.connect(conn_string)
-# cursor = conn.cursor()
+conn = pg.connect(conn_string)
+cursor = conn.cursor()
 # print "Connected!\n"
 db_engine = create_engine('postgresql://mm_analytics:Gar1h_m3ren6h1@darkplace.cn3mythbkvex.us-east-1.rds.amazonaws.com:5432/Dag')
 
@@ -40,14 +40,8 @@ db_engine = create_engine('postgresql://mm_analytics:Gar1h_m3ren6h1@darkplace.cn
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC 
-# MAGIC MSCK REPAIR TABLE mm_attributed_events;
-
-# COMMAND ----------
-
 today=datetime.now()
-start_date = (today - timedelta(days=37)).strftime('%Y-%m-%d')
+start_date = (today - timedelta(days=44)).strftime('%Y-%m-%d')
 end_date=(today - timedelta(days=30)).strftime('%Y-%m-%d')
 unique_id =uuid.uuid4().int
 # uuid.uuid4().int
@@ -214,6 +208,10 @@ print(start_date)
 
 # COMMAND ----------
 
+print(format_query(select,params))
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC #### Create a df for the above query
 
@@ -223,6 +221,18 @@ print(start_date)
 create_execute = sqlContext.sql(create_query)
 select_execute_df = sqlContext.sql(select_query).toPandas()
 # clear = sqlContext.sql("drop table if exists tmp_query_generator_gap_"+str(unique_id))
+
+# COMMAND ----------
+
+select_execute_df=select_execute_df.sort_values(by='mm_date').fillna(0)
+select_execute_df.head(200)
+
+# COMMAND ----------
+
+import datetime
+
+now = datetime.datetime.now()
+select_execute_df["batch"] = now
 
 # COMMAND ----------
 
