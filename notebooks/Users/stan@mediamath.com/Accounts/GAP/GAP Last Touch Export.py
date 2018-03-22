@@ -63,8 +63,8 @@ db_engine = create_engine('postgresql://'+user+':'+pw+'@'+host+':5432/'+dbname)
 # COMMAND ----------
 
 today=datetime.now()
-start_date = (today - timedelta(days=44)).strftime('%Y-%m-%d')
-end_date=(today - timedelta(days=30)).strftime('%Y-%m-%d')
+start_date = (today - timedelta(days=60)).strftime('%Y-%m-%d')
+end_date=(today - timedelta(days=1)).strftime('%Y-%m-%d')
 unique_id =uuid.uuid4().int
 # uuid.uuid4().int
 create = '''
@@ -237,10 +237,6 @@ params={
 create_query = format_query(create,params)
 select_query = format_query(select,params)
 
-
-# COMMAND ----------
-
-print(format_query(select,params))
 
 # COMMAND ----------
 
